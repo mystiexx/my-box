@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Add from "./app/Add/Add";
+import Chinese from "./app/Chinese/Chinese";
+import Home from "./app/Home/Home";
+import Korean from "./app/Korean/Korean";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route exact path="/" element={<Home />} />
+        <Route exact path="/add" element={<Add />} />
+        <Route exact path="/chinese" element={<Chinese />} />
+        <Route exact path="/korean" element={<Korean />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
