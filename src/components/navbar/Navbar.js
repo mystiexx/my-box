@@ -52,7 +52,7 @@ const Navbar = () => {
             onClick={() => setOpen(!open)}
           />
           <Box display={isNotSmallerScreen ? "block" : "none"}>
-            <NavLink to="/chinese" className="link" activeClassName='active'>
+            <NavLink to="/chinese" className="link" activeClassName="active">
               Chinese
             </NavLink>
             <NavLink to="/korean" className="link">

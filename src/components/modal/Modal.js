@@ -26,7 +26,7 @@ const Sidemodal = styled.div`
   }
 `;
 
-const Modal = ({ Open,toggle,  children, ...props }) => {
+const Modal = ({ Open, toggle, children, ...props }) => {
   return (
     <div>
       <Blur Open={Open} toggle={toggle} />

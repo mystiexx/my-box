@@ -2,22 +2,19 @@ import React, { useState, useEffect } from "react";
 import Layout from "../../Layout/Layout";
 import { Box, Container, Grid, Text, Image } from "@chakra-ui/react";
 import { useMediaQuery } from "@chakra-ui/media-query";
-import ChinaDrama from "./components/ChinaDrama";
 import "./style.css";
 import { Link } from "react-router-dom";
-import KoreanDrama from "./components/KoreanDrama";
 import Modal from "../../components/modal/Modal";
 import ViewDrama from "../Chinese/ViewDrama";
+import DramaList from "../../components/dramalist/DramaList";
 
-const Home = () => {
-  
+const Home = ({ reviews }) => {
   const [chinese, setChinese] = useState(null);
   const [korean, setKorean] = useState(null);
-  const [isNotSmallerScreen] = useMediaQuery("(min-width: 600px)");
+  const [isNotSmallerScreen] = useMediaQuery("(min-width: 920px)");
   const [movie, setMovie] = useState({});
   const [open, setOpen] = useState(false);
-
- 
+  const [display, setDisplay] = useState({});
 
   useEffect(() => {
     const movie = JSON.parse(localStorage.getItem("movies"));
@@ -39,6 +36,13 @@ const Home = () => {
   };
 
   useEffect(() => {
+    const randMov = Math.floor(Math.random() * reviews.length);
+    const rand = reviews[randMov];
+    console.log(rand);
+    setDisplay(rand);
+  }, [reviews]);
+
+  useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
     } else {
@@ -51,69 +55,69 @@ const Home = () => {
       <Modal Open={open} toggle={toggle}>
         <ViewDrama movie={movie} toggle={toggle} />
       </Modal>
-      <Box h={isNotSmallerScreen ? "100vh" : "70vh"}>
-        {chinese?.slice(0, 1)?.map((movie) => (
-          <Grid
-            templateColumns={
-              isNotSmallerScreen ? "repeat(2,1fr)" : "repeat(1,1fr)"
-            }
-            gap={2}
-            key={movie.id}
-          >
-            <Box>
-              <Container maxW="container.xl">
-                <Box
-                  backdropFilter={isNotSmallerScreen ? "auto" : "auto"}
-                  backdropBlur={isNotSmallerScreen ? "0px" : "10px"}
-                  marginLeft={isNotSmallerScreen ? "120px" : "10px"}
-                  marginTop={isNotSmallerScreen ? "180px" : "100px"}
-                  p={isNotSmallerScreen ? "0" : "10px"}
-                >
-                  <Text
-                    fontSize={isNotSmallerScreen ? "7xl" : "lg"}
-                    color="yellow.400"
-                  >
-                    {movie.title}
-                  </Text>
-                  <Text fontSize="md" fontWeight="500">
-                    {movie.review.slice(0, 300)}...
-                  </Text>
-                </Box>
-              </Container>
-            </Box>
-
-            {isNotSmallerScreen ? (
-              <Box zIndex="-2" display={isNotSmallerScreen ? "block" : "none"}>
-                <Image
-                  src={movie.imageurl}
-                  alt={movie.imageurl}
-                  position="absolute"
-                  top="5%"
-                  right="10%"
-                  boxShadow="base"
-                />
-              </Box>
-            ) : (
+      <Box h={isNotSmallerScreen ? "100vh" : "60vh"}>
+        <Grid
+          templateColumns={
+            isNotSmallerScreen ? "repeat(2,1fr)" : "repeat(1,1fr)"
+          }
+          gap={2}
+        >
+          <Box>
+            <Container maxW="container.xl">
               <Box
-                position="absolute"
-                zIndex="-2"
-                top="0"
-                w="auto"
-                display={isNotSmallerScreen ? "none" : "block"}
+                backdropFilter={isNotSmallerScreen ? "auto" : "auto"}
+                backdropBlur={isNotSmallerScreen ? "0px" : "10px"}
+                marginLeft={isNotSmallerScreen ? "120px" : "10px"}
+                marginTop={isNotSmallerScreen ? "180px" : "100px"}
+                p={isNotSmallerScreen ? "0" : "10px"}
               >
-                <Image
-                  src={movie.imageurl}
-                  alt={movie.imageurl}
-                  position="relative"
-                  top="5%"
-                  right="0"
-                  filter="auto"
-                  blur="1px"
-                />
+                <Text
+                  fontSize={isNotSmallerScreen ? "7xl" : "lg"}
+                  color="yellow.400"
+                >
+                  {display?.title}
+                </Text>
+                <Text fontSize="md" fontWeight="500">
+                  {display?.review?.slice(0, 300)}...
+                </Text>
               </Box>
-            )}
-          </Grid>
-        ))}
+            </Container>
+          </Box>
+
+          {isNotSmallerScreen ? (
+            <Box zIndex="-2" display={isNotSmallerScreen ? "block" : "none"}>
+              <Image
+                src={display.imageurl}
+                alt={display.imageurl}
+                position="absolute"
+                top="5%"
+                right="10%"
+                boxShadow="base"
+              />
+            </Box>
+          ) : (
+            <Box
+              position="absolute"
+              zIndex="-2"
+              top="0"
+              w="auto"
+              display={isNotSmallerScreen ? "none" : "block"}
+            >
+              <Image
+                width={isNotSmallerScreen ? "auto" : "100vw"}
+                h={isNotSmallerScreen ? "100%" : "60vh"}
+                src={display.imageurl}
+                alt={display.imageurl}
+                position="relative"
+                top="5%"
+                right="0"
+                filter="auto"
+                blur="1px"
+                objectFit="cover"
+              />
+            </Box>
+          )}
+        </Grid>
       </Box>
 
       <Box h={isNotSmallerScreen ? "100vh" : "85vh"} position="relative">
@@ -132,9 +136,9 @@ const Home = () => {
           </Box>
 
           <Box>
-            <ChinaDrama
+            <DramaList
               isNotSmallerScreen={isNotSmallerScreen}
-              chinese={chinese}
+              movie={chinese}
               handleMovie={handleMovie}
             />
           </Box>
@@ -156,9 +160,9 @@ const Home = () => {
             </Box>
           </Box>
           <Box>
-            <KoreanDrama
+            <DramaList
               isNotSmallerScreen={isNotSmallerScreen}
-              korean={korean}
+              movie={korean}
               handleMovie={handleMovie}
             />
           </Box>

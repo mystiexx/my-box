@@ -1,12 +1,11 @@
-
 .link {
-    margin-right: 40px;
+  margin-right: 40px;
 }
 
 .link:last-child {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 .active {
-    border-bottom: 3px solid #ECC94B;
+  border-bottom: 3px solid #ecc94b;
 }

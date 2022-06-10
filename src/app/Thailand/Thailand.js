@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../Layout/Layout";
-import { Box, Container, Text, Grid, Image } from "@chakra-ui/react";
+import { Box, Container, Grid, Image, Text } from "@chakra-ui/react";
+import SearchBar from "../../components/searchbar/SearchBar";
 import { useMediaQuery } from "@chakra-ui/media-query";
 import Modal from "../../components/modal/Modal";
-import ViewDrama from "./ViewDrama";
-import SearchBar from "../../components/searchbar/SearchBar";
+import ViewDrama from "../Chinese/ViewDrama";
 
-const Chinese = ({ reviews }) => {
+const Thailand = ({ reviews }) => {
   const [isNotSmallerScreen] = useMediaQuery("(min-width: 600px)");
   const [movies, setMovies] = useState(null);
   const [movie, setMovie] = useState({});
@@ -52,6 +52,7 @@ const Chinese = ({ reviews }) => {
         </Modal>
         <Container maxW="container.xl">
           <SearchBar handleSearch={handleSearch} />
+
           <Box mt={5}>
             <Grid
               templateColumns={
@@ -60,7 +61,7 @@ const Chinese = ({ reviews }) => {
               gap={4}
             >
               {movies
-                ?.filter((item) => item.country === "chinese")
+                ?.filter((item) => item.country === "thailand")
                 .map((movie) => (
                   <Box key={movie.id} onClick={() => handleMovie(movie)}>
                     <Image src={movie.imageurl} alt={movie.imageurl} />
@@ -75,4 +76,4 @@ const Chinese = ({ reviews }) => {
   );
 };
 
-export default Chinese;
+export default Thailand;
