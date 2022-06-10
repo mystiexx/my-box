@@ -38,6 +38,7 @@ const ViewDrama = ({ movie, toggle }) => {
                 className="tag"
                 backgroundColor="yellow.400"
                 marginLeft="10px"
+                textTransform="capitalize"
               >
                 {genre}
               </Tag>

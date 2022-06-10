@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Layout from "../../Layout/Layout";
 import {
   Box,
@@ -13,6 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { TagsInput } from "./style";
 import { useMediaQuery } from "@chakra-ui/media-query";
+import app from "../../firebase";
+import { getFirestore, setDoc, doc } from "firebase/firestore";
 
 const Add = () => {
   const [isNotSmallerScreen] = useMediaQuery("(min-width: 600px)");
@@ -23,7 +25,7 @@ const Add = () => {
   const [downloadurl, setDownloadUrl] = useState("");
   const [country, setCountry] = useState("");
   const [review, setReview] = useState("");
-  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const removeTags = (indexToRemove) => {
     setGenre([...genre.filter((_, index) => index !== indexToRemove)]);
@@ -35,13 +37,19 @@ const Add = () => {
     }
   };
 
-  useEffect(() => {
-    setMovies(JSON.parse(localStorage.getItem("movies")) || []);
-  }, []);
+  const clearInput = () => {
+    setTitle("");
+    setImageUrl("");
+    setCountry("");
+    setReview("");
+    setDownloadUrl("");
+    setVideoUrl("");
+    setGenre([]);
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    let tempData;
     let data = {
       id: new Date() * 100000000,
       title,
@@ -51,23 +59,20 @@ const Add = () => {
       country,
       review,
       genre,
-      created_at: new Date(),
+      created_at: new Date().toISOString(),
     };
+    const db = getFirestore(app);
 
-    if (movies.some((item) => item.title === data.title)) {
-      alert("Movie already exists");
-    } else {
-      tempData = { ...data };
-      setMovies([...movies, tempData]);
-      localStorage.setItem("movies", JSON.stringify([...movies, tempData]));
-      alert("Movie Saved");
-      setTitle("");
-      setImageUrl("");
-      setCountry("");
-      setReview("");
-      setDownloadUrl("");
-      setVideoUrl("");
-      setGenre([]);
+    try {
+      await setDoc(doc(db, "reviews", title), data).then((res) => {
+        console.log(res.code);
+        alert("added");
+        setLoading(false);
+      });
+      clearInput();
+    } catch (err) {
+      console.log(err.code);
+      setLoading(false);
     }
   };
   return (
@@ -154,6 +159,7 @@ const Add = () => {
                 <option>--Choose Country--</option>
                 <option value="chinese">Chinese</option>
                 <option value="korean">Korean</option>
+                <option value="thailand">Thailand</option>
               </Select>
             </Grid>
             <Textarea
@@ -164,10 +170,11 @@ const Add = () => {
               required
             />
             <Button
+              disbabled={loading}
               color="#2e2e2e"
               w="100%"
               backgroundColor="yellow.400"
-              type='submit'
+              type="submit"
               onClick={handleSubmit}
             >
               {" "}
